@@ -1,0 +1,49 @@
+{
+  "manifest_version": "0.3",
+  "name": "morphedra",
+  "display_name": "Morphedra",
+  "version": "0.1.0",
+  "description": "Turn figures into narrated whiteboard videos with Morphedra, from inside Claude.",
+  "long_description": "Create narrated whiteboard videos from your own figures (PNG, JPG or WEBP), follow their progress, list your videos, cancel queued ones and check your balance and usage. Needs a Morphedra API key (mk_live_... or mk_test_...). Test keys are free and add a watermark; live keys are billed at $1.80 per minute of finished video.",
+  "author": {
+    "name": "AN-MAYS (SMC-PRIVATE) LIMITED",
+    "email": "support@morphedra.com",
+    "url": "https://morphedra.com"
+  },
+  "homepage": "https://morphedra.com/api-docs",
+  "support": "mailto:support@morphedra.com",
+  "license": "MIT",
+  "keywords": ["morphedra", "whiteboard", "video", "science", "figures"],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.mjs"],
+      "env": {
+        "MORPHEDRA_API_KEY": "${user_config.api_key}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "create_video", "description": "Create a narrated whiteboard video from 1 to 6 figures (spends money on live keys)." },
+    { "name": "get_video", "description": "Get the status, progress and result of a video, optionally waiting for it to finish." },
+    { "name": "list_videos", "description": "List recent videos, newest first." },
+    { "name": "cancel_video", "description": "Cancel a video that is still queued." },
+    { "name": "get_balance", "description": "Show the prepaid balance and free test videos left." },
+    { "name": "get_usage", "description": "Show usage totals for the last 1 to 90 days." }
+  ],
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "Morphedra API key",
+      "description": "Your API key, starting with mk_live_ or mk_test_. It is stored in your computer's secret store.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "platforms": ["win32", "darwin", "linux"],
+    "runtimes": { "node": ">=18.0.0" }
+  }
+}
