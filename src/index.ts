@@ -14,7 +14,7 @@ const MIME: Record<string, string> = {
   ".webp": "image/webp",
 };
 
-const server = new McpServer({ name: "morphedra", version: "0.1.0" });
+const server = new McpServer({ name: "morphedra", version: "0.2.0" });
 
 type ToolResult = { content: { type: "text"; text: string }[]; isError?: boolean };
 const ok = (data: unknown): ToolResult => ({ content: [{ type: "text", text: JSON.stringify(data, null, 2) }] });
@@ -53,7 +53,11 @@ server.registerTool(
         .max(6)
         .describe("1 to 6 figures, all landscape or all portrait, at least 200 px per side."),
       notes: z.string().max(5000).optional().describe("Background for the narration. Used only when no scripts are given."),
-      voice: z.enum(["Charon", "Orus", "Kore", "Aoede"]).optional().describe("Narrator voice. Default Charon."),
+      voice: z.enum(["Charon", "Orus", "Kore", "Aoede", "Iapetus", "Rasalgethi", "Sulafat", "Erinome"]).optional().describe("Narrator voice. Default Charon."),
+      language: z
+        .enum(["en", "ur", "hi", "ar", "zh", "bn", "es", "fr", "de", "pt", "tr", "id", "ru"])
+        .optional()
+        .describe("Narration language, used only when no scripts are given (the narration is then written in this language). en, ur (Urdu), hi (Hindi), ar (Arabic), zh (Chinese), bn (Bangla), es, fr, de, pt, tr, id, ru. Default en. With scripts, the voice reads them as written, in any language."),
       title: z.string().max(100).optional(),
       max_duration_seconds: z
         .number()
@@ -99,7 +103,7 @@ server.registerTool(
         figures.push(out);
       }
       const body: any = { figures };
-      for (const k of ["notes", "voice", "title", "max_duration_seconds", "webhook_url"] as const) {
+      for (const k of ["notes", "voice", "language", "title", "max_duration_seconds", "webhook_url"] as const) {
         if (args[k] !== undefined) body[k] = args[k];
       }
       const headers = args.idempotency_key ? { "Idempotency-Key": args.idempotency_key } : undefined;

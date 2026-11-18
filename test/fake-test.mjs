@@ -65,11 +65,12 @@ check("balance", JSON.parse(txt(r)).balance_cents === 2000);
 r = await c.callTool({ name: "get_usage", arguments: { days: 7 } });
 check("usage days", JSON.parse(txt(r)).days === 7);
 
-r = await c.callTool({ name: "create_video", arguments: { figures: [{ image_path: "/tmp/fig.png", script: "Hello" }], max_duration_seconds: 15, idempotency_key: "k_1" } });
+r = await c.callTool({ name: "create_video", arguments: { figures: [{ image_path: "/tmp/fig.png", script: "Hello" }], max_duration_seconds: 15, idempotency_key: "k_1", language: "ur", voice: "Sulafat" } });
 const created = JSON.parse(txt(r));
 check("create queued", created.status === "queued" && !r.isError);
 check("file converted to data URL", lastCreate.figures[0].image_base64.startsWith("data:image/png;base64,") && !("image_path" in lastCreate.figures[0]));
 check("idempotency header", lastIdem === "k_1");
+check("language and new voice forwarded", lastCreate.language === "ur" && lastCreate.voice === "Sulafat");
 
 r = await c.callTool({ name: "create_video", arguments: { figures: [{ image_url: "https://example.com/a.png" }, { image_path: "/tmp/fig.png" }] } });
 check("two sources rejected? (second has only path, first only url: both fine)", !r.isError || true);
@@ -79,6 +80,8 @@ r = await c.callTool({ name: "create_video", arguments: { figures: [{ image_path
 check("missing file", r.isError && /not found/.test(txt(r)));
 r = await c.callTool({ name: "create_video", arguments: { figures: [{ image_path: "/tmp/fig.png" }], max_duration_seconds: 60 } });
 check("API error passed on", r.isError && /test_key_limit/.test(txt(r)) && /req_fake/.test(txt(r)), txt(r));
+r = await c.callTool({ name: "create_video", arguments: { figures: [{ image_url: "https://example.com/a.png" }], language: "xx" } });
+check("bad language rejected by schema", r.isError === true);
 r = await c.callTool({ name: "create_video", arguments: { figures: [] } });
 check("empty figures rejected by schema", r.isError === true);
 

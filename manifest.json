@@ -2,7 +2,7 @@
   "manifest_version": "0.3",
   "name": "morphedra",
   "display_name": "Morphedra",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Turn figures into narrated whiteboard videos with Morphedra, from inside Claude.",
   "long_description": "Create narrated whiteboard videos from your own figures (PNG, JPG or WEBP), follow their progress, list your videos, cancel queued ones and check your balance and usage. Needs a Morphedra API key (mk_live_... or mk_test_...). Test keys are free and add a watermark; live keys are billed at $1.80 per minute of finished video.",
   "author": {

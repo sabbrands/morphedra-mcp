@@ -1,6 +1,6 @@
 {
   "name": "morphedra-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Claude Desktop extension for the Morphedra Whiteboard Video API",
   "private": true,
   "type": "module",
